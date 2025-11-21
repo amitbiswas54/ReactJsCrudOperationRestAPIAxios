@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-    <div className='container lg:max-w[80%] px-10'> 
+    <div className='container mx-auto max-w-[96%] lg:max-w[80%] px-10'> 
       <h2 className="text-4xl font-bold text-yellow-300 py-5 text-center ">
         React Js Crud Operation Rest API Axios</h2>
 
