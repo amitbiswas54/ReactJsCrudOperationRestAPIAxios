@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-    <div className='container mx-auto max-w-[96%] lg:max-w[80%] px-10'> 
+    <div className='container mx-auto max-w-[96%] lg:max-w[80%] lg:px-10 px-5'> 
       <h2 className="text-4xl font-bold text-yellow-300 py-5 text-center ">
         React Js Crud Operation Rest API Axios</h2>
 
@@ -20,6 +20,7 @@ function App() {
           ensure clean code structure and maintainability. Designed with 
           responsive UI and proper error handling for production-ready API 
           integration.</p>
+          
       <Listing />
       </div>
     </>
