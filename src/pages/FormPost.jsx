@@ -35,21 +35,19 @@ function FormPost({data, setData, editData, setEditData}) {
         });       
     }
 
- 
-
     const modifyPost = async () => {
       try {
      const res =await updatePost(editData.id, addData)
 
+      toast.success('Updated successfully!')
+           
+
      setData((prev)=>{
       return prev.map((item)=>{
-        return item.id === editData.id ? res.data : item
+        return item.id === editData.id ? res.data : item;
       } 
-      )
-     
-        
+      )  
         }
-
       )
     }
       catch (error) {
@@ -68,12 +66,14 @@ function FormPost({data, setData, editData, setEditData}) {
                 res.data.id = nextId; // Assign a new ID for UI purposes
                 setData([...data, res.data]);            
                 setAddData({title: '', body: ''});
+
                  toast.success('Post created successfully!');
+
             }
         } catch (error) {
             console.error('Error creating post:', error);
         }
-    }
+    } 
     const submitValues = (e) => {
         e.preventDefault();  
   
@@ -87,8 +87,9 @@ function FormPost({data, setData, editData, setEditData}) {
       else if (action === 'Edit') {
           // Update functionality can be implemented here
           modifyPost();
-           setEditData({title: '', body: ''});
-      }
+           setEditData({});  // for button value edit to add 
+
+}
 
       
     }
@@ -97,11 +98,6 @@ function FormPost({data, setData, editData, setEditData}) {
 
   return (
    <>
-
-
-
-        
-            
             <div className='max-w-[60rem] mx-auto p-4 mt-5
              shadow-lg rounded-lg bg-gray-900 text-white'>
             <form onSubmit={submitValues} className='flex flex-col md:flex-row gap-5'>
