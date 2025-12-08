@@ -1,86 +1,135 @@
-import React, { useState } from 'react'
-import { addPost } from '../api/PostApi';
+import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function FormPost({data, setData}) {
+import { addPost, updatePost } from '../api/PostApi';
 
-    const [addData, setAddData] = useState({
-        
+function FormPost({data, setData, editData, setEditData}) {
+  const [open, setOpen] = useState(false);
+        const [error, setError] = useState(""); // Error state
+
+    const [addData, setAddData] = useState({     
         title: '',
         body: ''
     });
+
+    let isEdit = Object.keys(editData).length === 0;
      
+    useEffect(() => {
+     editData && setAddData({
+            title: editData.title || '',
+            body: editData.body || ''
+        });   
+      
+            },[editData]);   
 
+    
 
-    const onchandelHandler = (e) => {
-
+    const onchangeHandler = (e) => {
         const {name, value} = e.target;
-        // setAddvalue({...addvalue, [name]: value});  
         setAddData(prevState => {
             return { 
                  ...prevState,
             [name]: value
-              }
-           
+              }  
         });       
-
     }
 
-    const post = async () => {
+ 
 
-        try {
+    const modifyPost = async () => {
+      try {
+     const res =await updatePost(editData.id, addData)
+
+     setData((prev)=>{
+      return prev.map((item)=>{
+        return item.id === editData.id ? res.data : item
+      } 
+      )
+     
+        
+        }
+
+      )
+    }
+      catch (error) {
+        console.error('Error updating post:', error); 
+      }
+
+    }
+   const post = async () => {
+        try {       
             const res = await addPost(addData);
-            console.log('Response from addPost:', res);
-            if (res.status === 201) {
-                // append new post to UI
+            if(addData.title ==='' || addData.body ===''){
+              return toast.error('Please fill in all fields');
+            }else if
+             (res.status === 201) {
                 const nextId = data.length > 0 ? data[data.length - 1].id + 1 : 1;
                 res.data.id = nextId; // Assign a new ID for UI purposes
-
-                setData([...data, res.data]);
-              setAddData({title: '', body: ''});
-
-
+                setData([...data, res.data]);            
+                setAddData({title: '', body: ''});
+                 toast.success('Post created successfully!');
             }
-
-
         } catch (error) {
             console.error('Error creating post:', error);
         }
     }
-
-
     const submitValues = (e) => {
-        e.preventDefault();
-       post()
+        e.preventDefault();  
+  
+      let action = e.nativeEvent.submitter.value;
+
+      if (action === 'Add') {
+          post()
+          setAddData({title: '', body: ''});
+          
+      }
+      else if (action === 'Edit') {
+          // Update functionality can be implemented here
+          modifyPost();
+           setEditData({title: '', body: ''});
+      }
+
+      
     }
 
 
 
   return (
    <>
-        <div className='flex flex-col max-w-[800px] mx-auto gap-5 p-4 mt-5 shadow-lg rounded-lg bg-gray-900 text-black'>
+
+
+
+        
+            
+            <div className='max-w-[60rem] mx-auto p-4 mt-5
+             shadow-lg rounded-lg bg-gray-900 text-white'>
             <form onSubmit={submitValues} className='flex flex-col md:flex-row gap-5'>
 
             <input type="text"
-             className='flex-grow px-4'
+             className='flex-grow px-4 text-gray-800'
              placeholder='Add Title'
              autoComplete='off'
              name="title"
                value={addData.title}
-               onChange={onchandelHandler}
+               onChange={onchangeHandler}
 
              />
 
             <input type="text" 
-           className='flex-grow px-4 '
+           className='flex-grow px-4 text-gray-800'
              placeholder='Add Body'
              autoComplete='off'
              name="body"
                value={addData.body}
-               onChange={onchandelHandler}
+               onChange={onchangeHandler}
              />
-            <button type='submit' className='px-5 py-2 rounded-md bg-green-600 text-white font-semibold'>Add</button>
+            <button type='submit' 
+            className='px-5 py-2 rounded-md bg-green-600 text-white font-semibold'
+             value={isEdit? 'Add': 'Edit'}>{isEdit ? 'Add': 'Edit'}</button>
             </form>
-        </div>
+            </div>
+          <ToastContainer />
 
    </>
   )

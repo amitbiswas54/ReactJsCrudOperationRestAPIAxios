@@ -13,7 +13,7 @@ function App() {
       <h2 className="text-4xl font-bold text-yellow-300 py-5 text-center ">
         React Js Crud Operation Rest API Axios</h2>
 
-        <p className='text-white text-center'>A fully functional React JS CRUD application 
+        <p className='text-white text-center max-w-[80rem] mx-auto'>A fully functional React JS CRUD application 
           that interacts with a REST API using Axios. The project includes 
           features to Create, Read, Update, and Delete data with real-time 
           UI updates. It uses React Hooks, Axios, and modular components to 
